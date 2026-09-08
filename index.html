@@ -3,88 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Personal Website</title>
-
+    <meta name="theme-color" content="#101114">
+    <meta name="description" content="Yu-Rui Xie — Department of Mathematics, National Taiwan University.">
+    <title>Yu-Rui Xie | Mathematics, NTU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #101114;
+            --panel: #17181c;
+            --text: #f0eee9;
+            --muted: #a19fa2;
+            --line: #38393d;
+            --accent: #b8aa93;
+            --rail: 264px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 30px; }
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; }
+        ::selection { background: var(--accent); color: var(--bg); }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+        .skip-link { position: fixed; top: -80px; left: 12px; z-index: 100; background: var(--text); color: var(--bg); padding: 12px; }
+        .skip-link:focus { top: 12px; }
 
-        header {
-            background-color: #1f2937;
-            color: white;
-            text-align: center;
-            padding: 60px 20px;
+        /* Fixed navigation, inspired by an editorial artist website. */
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: var(--rail);
+            padding: 44px 30px 30px;
+            border-right: 1px solid var(--line);
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            z-index: 20;
         }
-
-        header h1 {
-            margin-bottom: 10px;
+        .brand { display: inline-block; align-self: flex-start; }
+        .brand-mark {
+            display: block;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 45px;
+            font-weight: 500;
+            line-height: .9;
+            letter-spacing: -.055em;
         }
-
-        main {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .brand-caption { display: block; margin-top: 13px; color: var(--muted); font-size: 9px; letter-spacing: .22em; line-height: 1.8; }
+        .nav { display: flex; flex-direction: column; gap: 0; margin-top: 85px; }
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 0;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .19em;
+            transition: color .2s, transform .2s;
         }
+        .nav a:hover, .nav a.active { color: var(--accent); transform: translateX(4px); }
+        .nav .num { color: var(--muted); font-size: 9px; font-weight: 400; letter-spacing: 0; }
+        .sidebar-bottom { margin-top: auto; color: var(--muted); font-size: 10px; letter-spacing: .08em; line-height: 2; }
+        .sidebar-bottom span { display: block; }
+        .menu-toggle { display: none; }
 
-        section {
-            background: white;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 8px;
+        main { margin-left: var(--rail); min-width: 0; }
+        .eyebrow { color: var(--accent); font-size: 10px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; }
+        .serif { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; }
+
+        /* Large, quiet introduction instead of the old rectangular header. */
+        .hero {
+            min-height: 100svh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            padding: 100px clamp(32px, 7.2vw, 120px);
+            isolation: isolate;
         }
-
-        h2 {
-            color: #1f2937;
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: min(65vw, 780px);
+            aspect-ratio: 1;
+            right: -22%; top: 50%;
+            transform: translateY(-50%);
+            border: 1px solid rgba(184,170,147,.17);
+            border-radius: 50%;
+            z-index: -1;
         }
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: min(42vw, 490px);
+            aspect-ratio: 1;
+            right: -10%; top: 50%;
+            transform: translateY(-50%);
+            border: 1px solid rgba(184,170,147,.11);
+            border-radius: 50%;
+            z-index: -1;
+        }
+        .hero-title {
+            margin: 32px 0 0;
+            font-size: clamp(76px, 11vw, 180px);
+            line-height: .78;
+            letter-spacing: -.055em;
+        }
+        .hero-title span { display: block; }
+        .hero-title span + span { margin-left: .18em; }
+        .hero-rule { width: 60px; height: 1px; background: var(--accent); margin: 45px 0 25px; }
+        .hero-subtitle { margin: 0; color: var(--muted); font-size: 13px; letter-spacing: .03em; line-height: 1.9; }
+        .hero-bottom { position: absolute; bottom: 35px; left: clamp(32px, 7.2vw, 120px); right: clamp(32px, 7.2vw, 120px); display: flex; justify-content: space-between; gap: 20px; align-items: end; }
+        .hero-bottom a { font-size: 10px; letter-spacing: .2em; }
+        .hero-bottom a:hover { color: var(--accent); }
+        .hero-bottom span { color: var(--muted); font-size: 10px; letter-spacing: .15em; }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #777;
+        /* Sections are open, spacious, and separated by fine lines. */
+        .content-section { border-top: 1px solid var(--line); padding: 100px clamp(32px, 7.2vw, 120px) 115px; }
+        .section-heading { display: flex; align-items: baseline; gap: 22px; margin-bottom: 55px; }
+        .section-number { color: var(--accent); font-size: 10px; letter-spacing: .1em; }
+        .section-title { margin: 0; font-size: clamp(54px, 7vw, 100px); line-height: .95; letter-spacing: -.035em; }
+        .section-copy { max-width: 670px; margin-left: 44px; }
+        .section-copy p { margin: 0; color: #c9c7c6; font-size: 15px; line-height: 2.15; }
+        .section-copy .small-label { margin-top: 38px; color: var(--muted); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+
+        /* The list: large type, numbering, fine dividers, subtle hover. */
+        .editorial-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+        .editorial-list li { border-bottom: 1px solid var(--line); }
+        .list-row { display: grid; grid-template-columns: 38px minmax(0,1fr) 28px; gap: 18px; align-items: center; padding: 28px 0; transition: padding .25s, color .25s; }
+        .list-row:hover { padding-left: 12px; color: var(--accent); }
+        .list-number { align-self: start; padding-top: 8px; color: var(--muted); font-size: 10px; }
+        .list-title { display: block; font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(30px, 4vw, 47px); line-height: 1.1; letter-spacing: -.025em; }
+        .list-description { display: block; margin-top: 11px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+        .list-arrow { align-self: start; padding-top: 9px; font-size: 22px; font-weight: 400; }
+        .section-note { color: var(--muted); font-size: 11px; line-height: 1.8; margin: 24px 0 0; }
+        .contact-line { display: inline-block; margin: 12px 0 30px 44px; padding-bottom: 8px; border-bottom: 1px solid var(--accent); font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(29px, 4.5vw, 54px); transition: color .2s; }
+        .contact-line:hover { color: var(--accent); }
+        .contact-note { margin-left: 44px; color: var(--muted); font-size: 12px; line-height: 1.9; }
+        footer { margin-left: var(--rail); padding: 30px clamp(32px, 7.2vw, 120px); border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+        footer a:hover { color: var(--accent); }
+
+        @media (max-width: 800px) {
+            :root { --rail: 0px; }
+            html { scroll-padding-top: 70px; }
+            .sidebar { position: sticky; top: 0; width: 100%; height: 70px; padding: 0 24px; flex-direction: row; align-items: center; justify-content: space-between; border-right: 0; border-bottom: 1px solid var(--line); }
+            .brand-mark { font-size: 32px; }
+            .brand-caption { display: none; }
+            .menu-toggle { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 0 12px 12px; border: 0; background: none; color: var(--text); cursor: pointer; font-size: 10px; letter-spacing: .18em; }
+            .menu-icon { display: flex; flex-direction: column; gap: 5px; }
+            .menu-icon i { display: block; width: 20px; height: 1px; background: currentColor; }
+            .nav { display: none; position: absolute; top: 69px; left: 0; right: 0; margin: 0; padding: 20px 30px 30px; background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: 0 20px 35px #0004; }
+            .nav.open { display: flex; }
+            .nav a { padding: 17px 0; }
+            .sidebar-bottom { display: none; }
+            main, footer { margin-left: 0; }
+            .hero { min-height: calc(100svh - 70px); padding: 80px 30px 110px; }
+            .hero-title { font-size: clamp(76px, 15vw, 135px); }
+            .hero::before { width: 100vw; right: -70%; }
+            .hero::after { width: 70vw; right: -45%; }
+            .hero-bottom { left: 30px; right: 30px; bottom: 28px; }
+            .content-section { padding: 75px 30px 85px; }
+            .section-heading { margin-bottom: 38px; gap: 16px; }
+            .section-copy, .contact-line, .contact-note { margin-left: 0; }
+            .contact-line { font-size: clamp(29px, 6vw, 45px); }
+            footer { padding: 28px 30px; }
+        }
+        @media (max-width: 480px) {
+            .hero-title { font-size: clamp(70px, 16.5vw, 90px); }
+            .hero-title span + span { margin-left: .08em; }
+            .hero-subtitle { font-size: 12px; }
+            .hero-bottom span { display: none; }
+            .section-title { font-size: 54px; }
+            .list-row { grid-template-columns: 25px minmax(0,1fr) 20px; gap: 10px; }
+            .list-title { font-size: 34px; }
+            .list-description { font-size: 11px; }
+            footer { flex-direction: column; gap: 8px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
     </style>
 </head>
-
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <header>
-        <h1>Yu-Rui Xie</h1>
-        <p>Department of Mathematics, NTU</p>
-    </header>
+    <aside class="sidebar" aria-label="Site navigation">
+        <a class="brand" href="#home" aria-label="Yu-Rui Xie, home">
+            <span class="brand-mark">Y R.</span>
+            <span class="brand-caption">YU-RUI XIE<br>PERSONAL WEBSITE</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav">
+            <span>MENU</span><span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+        </button>
+        <nav class="nav" id="site-nav" aria-label="Main navigation">
+            <a href="#home"><span class="num">00</span> HOME</a>
+            <a href="#about"><span class="num">01</span> ABOUT</a>
+            <a href="#research"><span class="num">02</span> RESEARCH</a>
+            <a href="#contact"><span class="num">03</span> CONTACT</a>
+        </nav>
+        <div class="sidebar-bottom"><span>DEPARTMENT OF MATHEMATICS</span><span>NATIONAL TAIWAN UNIVERSITY</span><span>TAIPEI, TAIWAN</span></div>
+    </aside>
 
-    <main>
-        <section>
-            <h2>About Me</h2>
-            <p>
-                Hello! I am a student.
-            </p>
+    <main id="main">
+        <section class="hero" id="home" aria-labelledby="home-title">
+            <div class="eyebrow">Personal Website &nbsp; / &nbsp; Mathematics</div>
+            <h1 class="hero-title serif" id="home-title"><span>Yu-Rui</span><span>Xie.</span></h1>
+            <div class="hero-rule"></div>
+            <p class="hero-subtitle">Department of Mathematics<br>National Taiwan University</p>
+            <div class="hero-bottom"><a href="#about">SCROLL TO EXPLORE &nbsp; ↓</a><span>NTU &nbsp; / &nbsp; TAIPEI</span></div>
         </section>
 
-        <section>
-            <h2>Research & Projects</h2>
-            <p>
-                This section will introduce my research projects,
-                academic interests, and other work.
-            </p>
+        <section class="content-section" id="about" aria-labelledby="about-title">
+            <div class="section-heading"><span class="section-number">01 /</span><h2 class="section-title serif" id="about-title">About Me</h2></div>
+            <div class="section-copy">
+                <p>Hello! I am a student in the Department of Mathematics at National Taiwan University. Welcome to my personal website.</p>
+                <p class="small-label">Mathematics &nbsp; / &nbsp; National Taiwan University</p>
+            </div>
         </section>
 
-        <section>
-            <h2>Contact</h2>
-            <p>
-                You can add your email, GitHub profile, or other
-                contact information here.
-            </p>
+        <section class="content-section" id="research" aria-labelledby="research-title">
+            <div class="section-heading"><span class="section-number">02 /</span><h2 class="section-title serif" id="research-title">Research<br>&amp; Projects</h2></div>
+            <ul class="editorial-list">
+                <li><div class="list-row"><span class="list-number">01</span><div><span class="list-title">Research Interests</span><span class="list-description">My research interests and current areas of study. Details to be added.</span></div><span class="list-arrow" aria-hidden="true">↗</span></div></li>
+                <li><div class="list-row"><span class="list-number">02</span><div><span class="list-title">Academic Projects</span><span class="list-description">A collection of academic projects and related work. Details to be added.</span></div><span class="list-arrow" aria-hidden="true">↗</span></div></li>
+                <li><div class="list-row"><span class="list-number">03</span><div><span class="list-title">Other Work</span><span class="list-description">Other experiences and projects I would like to share. Details to be added.</span></div><span class="list-arrow" aria-hidden="true">↗</span></div></li>
+            </ul>
+            <p class="section-note">This section will be updated as I add my work and research.</p>
+        </section>
+
+        <section class="content-section" id="contact" aria-labelledby="contact-title">
+            <div class="section-heading"><span class="section-number">03 /</span><h2 class="section-title serif" id="contact-title">Contact</h2></div>
+            <div class="section-copy"><p>For academic inquiries or other questions, please feel free to get in touch.</p></div>
+            <!-- Replace the text below with your real email or GitHub link. -->
+            <div class="contact-line">Contact information coming soon.</div>
+            <p class="contact-note">Department of Mathematics<br>National Taiwan University</p>
         </section>
     </main>
 
-    <footer>
-        © 2026 Yu-Rui Xie
-    </footer>
+    <footer><span>© 2026 Yu-Rui Xie. All rights reserved.</span><a href="#home">BACK TO TOP ↑</a></footer>
 
+    <script>
+        const menuButton = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('#site-nav');
+        function closeMenu() {
+            nav.classList.remove('open');
+            menuButton.setAttribute('aria-expanded', 'false');
+            menuButton.setAttribute('aria-label', 'Open navigation');
+        }
+        menuButton.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('open');
+            menuButton.setAttribute('aria-expanded', String(isOpen));
+            menuButton.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+        });
+        nav.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') closeMenu(); });
+    </script>
 </body>
 </html>
